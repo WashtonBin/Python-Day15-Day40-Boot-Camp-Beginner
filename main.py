@@ -11,7 +11,7 @@ screen.bgcolor("black")
 screen.tracer(0)
 
 
-
+##
 r_paddle = Paddle(350,0)
 l_paddle = Paddle(-350,0)
 
