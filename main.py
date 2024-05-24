@@ -35,6 +35,118 @@ resources = {
 # b. The prompt should show every time action has completed, e.g. once the drink is
 # dispensed. The prompt should show again to serve the next customer.
 
+
+"""prompt user coffee input"""
+def prompt_user():
+    prompt = input("What would you like? (espresso/latte/cappuccino): ").lower()
+    return prompt
+
+"""insert coins"""
+def insert_coins():
+    quarters = int(input("How many quarters?: ")) * 0.25
+    dimes = int(input("How many dimes?: ")) * 0.1
+    nickles = int(input("How many quarters?: ")) * 0.05
+    pennies = int(input("How many pennies?: ")) * 0.01
+    return quarters + dimes + nickles + pennies
+
+
+"""prompt water """
+def make_water(prompt_user, water):
+    if water >= MENU[prompt_user]["ingredients"]["water"]:
+        return water - MENU[prompt_user]["ingredients"]["water"]
+    else:
+        print("Sorry that's not enough water.")
+        return water
+
+"""prompt milk"""
+def make_milk(prompt_user, milk):
+    if milk >= MENU[prompt_user]["ingredients"]["milk"]:
+        return milk - MENU[prompt_user]["ingredients"]["milk"]
+    else:
+        print("Sorry that's not enough milk.")
+        return milk
+
+"""prompt milk"""
+def make_coffee(prompt_user, coffee):
+    if coffee >= MENU[prompt_user]["ingredients"]["coffee"]:
+        return coffee - MENU[prompt_user]["ingredients"]["coffee"]
+    else:
+        print("Sorry that's not enough coffee.")
+        return coffee
+
+def suffcient_resources(order_ingredient):
+    for item in order_ingredient:
+        if resources[item] > order_ingredient[item]:
+            return False
+    return True
+
+
+
+
+"""execute coffee machine"""
+def coffee_machine():
+    #get initial values from dictionaries
+    is_on = True
+    water = resources["water"]
+    milk = resources["milk"]
+    coffee = resources["coffee"]
+    money = 0
+    #turn coffee machine
+    while is_on is True:
+        prompt = prompt_user()
+        if prompt == "report":
+            print(f"Water: {water}ml")
+            print(f"Milk: {milk}ml")
+            print(f"Coffee: {coffee}g")
+            print(f"Money: ${round(money, 2)}")
+        elif prompt == "off":
+            print("Coffee Machine is off.")
+            is_on = False
+        elif prompt == "latte" or prompt == "cappuccino":
+            # check if water, coffee, and milk are out of service
+            make_water(prompt, water)
+            make_coffee(prompt, coffee)
+            make_milk(prompt, milk)
+            # check water, coffee, milk condition if not come back to the main menu
+            if water >= MENU[prompt]["ingredients"]["water"] and coffee >= MENU[prompt]["ingredients"]["coffee"] and milk >= MENU[prompt]["ingredients"]["milk"]:
+                print("Please insert coins")
+                coins = insert_coins()
+                if MENU[prompt]["cost"] <= coins:
+                    # get values from make_method
+                    water = make_water(prompt, water)
+                    coffee = make_coffee(prompt, coffee)
+                    milk = make_milk(prompt, milk)
+                    # set money print 2 decimal place
+                    money += round(MENU[prompt]["cost"], 2)
+
+                    print(f"Here is ${round(coins - MENU[prompt]["cost"], 2)} in change.")
+                    print("Here is your espresso 😀 Enjoy")
+                else:
+                    print(f"Sorry that's not enough money.${coins} refunded.")
+
+        elif prompt == "espresso":
+            make_water(prompt, water)
+            make_coffee(prompt, coffee)
+            # only check water and coffee
+            if water >= MENU[prompt]["ingredients"]["water"] and coffee >= MENU[prompt]["ingredients"]["coffee"]:
+                print("Please insert coins")
+                coins = insert_coins()
+                if MENU[prompt]["cost"] <= coins:
+                    water = make_water(prompt, water)
+                    coffee = make_coffee(prompt, coffee)
+                    money += round(MENU[prompt]["cost"], 2)
+
+                    print(f"Here is ${round(coins - MENU[prompt]["cost"], 2)} in change.")
+                    print("Here is your espresso 😀 Enjoy")
+                else:
+                    print(f"Sorry that's not enough money.${coins} refunded.")
+        else:
+            print("The input is invalid.")
+
+coffee_machine()
+
+
+
 #TODO 2. Turn off the Coffee Machine by entering “off” to the prompt.
 # a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
 # the machine. Your code should end execution when this happens.
