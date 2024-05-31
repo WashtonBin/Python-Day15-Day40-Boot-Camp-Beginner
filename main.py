@@ -32,5 +32,9 @@ new_dict = {row.letter: row.code for(index, row) in word_data_frame.iterrows()}
 #TODO 2. Create a list of the phonetic code words from a word that the user inputs.
 
 user_input = input("Enter a word: ").upper()
-user_result = [new_dict[letter] for letter in user_input]
-print(user_result)
+try:
+    user_result = [new_dict[letter] for letter in user_input]
+except KeyError:
+    print("Sorry, please enter alphabet please.")
+else:
+    print(user_result)
