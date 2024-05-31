@@ -35,6 +35,6 @@ user_input = input("Enter a word: ").upper()
 try:
     user_result = [new_dict[letter] for letter in user_input]
 except KeyError:
-    print("Sorry, please enter alphabet please.")
+    print("Sorry, please only letters in the alphabet.")
 else:
     print(user_result)
